@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YeezyTypeLink - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            --bg: #f8f9ff;
+            --card: white;
+            --text: #2c3e50;
+            --border: #e1e8ed;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading i { font-size: 4rem; color: white; margin-bottom: 1rem; }
+        .loading h1 { color: white; font-size: 2rem; font-weight: 700; }
+
+        /* Admin Login */
+        .admin-login {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .admin-card {
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .admin-logo {
+            font-size: 3rem;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .admin-card h2 {
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .admin-card p { color: #666; margin-bottom: 2rem; }
+
+        .admin-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        .admin-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--card);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+
+        .btn:hover { transform: translateY(-2px); }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 2rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--text);
+            border-left-color: #ff6b6b;
+        }
+
+        .nav-item i { margin-right: 1rem; width: 20px; }
+
+        .content-area {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-top: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover { transform: translateY(-5px); }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label { color: #666; font-size: 1.1rem; }
+
+        .section {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-item, .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .user-item:hover, .post-item:hover {
+            background: rgba(255, 107, 107, 0.05);
+            border-color: #ff6b6b;
+        }
+
+        .item-info { flex: 1; }
+        .item-actions { display: flex; gap: 0.5rem; }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-online { background: rgba(39, 174, 96, 0.2); color: var(--success); }
+        .status-offline { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
+        .status-locked { background: rgba(243, 156, 18, 0.2); color: var(--warning); }
+
+        .site-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            border-radius: 34px;
+            transition: 0.3s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        input:checked + .slider { background: var(--success); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        @media (max-width: 768px) {
+            .main-content { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading -->
+    <div class="loading">
+        <i class="fas fa-shield-alt"></i>
+        <h1>Admin Panel</h1>
+    </div>
+
+    <!-- Admin Login -->
+    <div id="login-container" class="admin-login">
+        <div class="admin-card">
+            <div class="admin-logo">🔥 ADMIN</div>
+            <h2>Admin Login</h2>
+            <p>Enter credentials to access dashboard</p>
+            <input type="password" class="admin-input" id="admin-password" placeholder="Admin Password">
+            <button class="admin-btn" id="admin-login">Enter Dashboard</button>
+            <div id="login-error" style="color: #e74c3c; margin-top: 1rem; font-size: 14px;"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard hidden">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-danger" id="lock-site"><i class="fas fa-lock"></i> Lock Site</button>
+                <button class="btn btn-warning" id="clear-data"><i class="fas fa-trash"></i> Clear All</button>
+                <button class="btn btn-primary" id="logout-admin"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <div class="nav-item active" data-section="overview">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Overview</span>
+                </div>
+                <div class="nav-item" data-section="users">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
+                </div>
+                <div class="nav-item" data-section="posts">
+                    <i class="fas fa-images"></i>
+                    <span>Posts</span>
+                </div>
+                <div class="nav-item" data-section="site-control">
+                    <i class="fas fa-cogs"></i>
+                    <span>Site Control</span>
+                </div>
+            </nav>
+
+            <!-- Content -->
+            <main class="content-area">
+                <!-- Overview -->
+                <section id="overview-section" class="section active">
+                    <h2><i class="fas fa-chart-bar"></i> Platform Stats</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-users">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-posts">0</div>
+                            <div class="stat-label">Total Posts</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="active-users">0</div>
+                            <div class="stat-label">Active Today</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="site-status">Online</div>
+                            <div class="stat-label">Site Status</div>
+                        </div>
+                    </div>
+
+                    <h2><i class="fas fa-clock"></i> Recent Activity</h2>
+                    <div class="section">
+                        <div id="activity-list">
+                            <div class="no-content">No recent activity</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users -->
+                <section id="users-section" class="section">
+                    <h2><i class="fas fa-users"></i> User Management</h2>
+                    <div id="users-list">
+                        <div class="no-content">No users found</div>
+                    </div>
+                </section>
+
+                <!-- Posts -->
+                <section id="posts-section" class="section">
+                    <h2><i class="fas fa-images"></i> Post Management</h2>
+                    <input type="text" id="post-search" placeholder="Search posts..." class="admin-input" style="margin-bottom: 1rem;">
+                    <div id="posts-list">
+                        <div class="no-content">No posts found</div>
+                    </div>
+                </section>
+
+                <!-- Site Control -->
+                <section id="site-control-section" class="section">
+                    <h2><i class="fas fa-cogs"></i> Site Controls</h2>
+                    <div class="site-controls">
+                        <label class="switch">
+                            <input type="checkbox" id="site-lock-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <span id="site-lock-status">Site Online</span>
+                    </div>
+                    <div style="margin-top: 2rem;">
+                        <button class="btn btn-danger" id="maintenance-mode" style="margin-right: 1rem;">Maintenance Mode</button>
+                        <button class="btn btn-success" id="backup-data">Backup Data</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        class AdminPanel {
+            constructor() {
+                this.adminPassword = 'yeezyadmin2026'; // Change this password
+                this.isLoggedIn = false;
+                this.siteLocked = localStorage.getItem('yeezy_site_locked') === 'true';
+                this.init();
+            }
+
+            init() {
+                setTimeout(() => {
+                    document.querySelector('.loading').remove();
+                }, 2000);
+
+                this.bindEvents();
+                this.loadData();
+            }
+
+            bindEvents() {
+                // Admin login
+                document.getElementById('admin-login').addEventListener('click', () => this.adminLogin());
+                document.getElementById('admin-password').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.adminLogin();
+                });
+
+                // Navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => this.navigate(e));
+                });
+
+                // Header actions
+                document.getElementById('lock-site').addEventListener('click', () => this.lockSite());
+                document.getElementById('clear-data').addEventListener('click', () => this.clearAllData());
+                document.getElementById('logout-admin').addEventListener('click', () => this.logoutAdmin());
+
+                // Site controls
+                document.getElementById('site-lock-toggle').addEventListener('change', (e) => this.toggleSiteLock(e.target.checked));
+                document.getElementById('maintenance-mode').addEventListener('click', () => this.maintenanceMode());
+                document.getElementById('backup-data').addEventListener('click', () => this.backupData());
+
+                // Search
+                document.getElementById('post-search').addEventListener('input', (e) => this.searchPosts(e.target.value));
+            }
+
+            adminLogin() {
+                const password = document.getElementById('admin-password').value;
+                if (password === this.adminPassword) {
+                    this.isLoggedIn = true;
+                    document.getElementById('login-container').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    this.updateStats();
+                    console.log('✅ Admin logged in');
+                } else {
+                    document.getElementById('login-error').textContent = '❌ Wrong password!';
+                }
+            }
+
+            logoutAdmin() {
+                this.isLoggedIn = false;
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('login-container').classList.remove('hidden');
+                document.getElementById('admin-password').value = '';
+            }
+
+            navigate(e) {
+                e.preventDefault();
+                const section = e.currentTarget.dataset.section;
+
+                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(`${section}-section`).classList.add('active');
+
+                if (section === 'users') this.loadUsers();
+                if (section === 'posts') this.loadPosts();
+            }
+
+            loadData() {
+                this.users = JSON.parse(localStorage.getItem('yeezy_users')) || {};
+                this.posts = JSON.parse(localStorage.getItem('yeezy_posts')) || [];
+                this.activity = JSON.parse(localStorage.getItem('yeezy_activity')) || [];
+            }
+
+            updateStats() {
+                document.getElementById('total-users').textContent = Object.keys(this.users).length;
+                document.getElementById('total-posts').textContent = this.posts.length;
+                document.getElementById('active-users').textContent = Math.floor(Math.random() * 50) + 10;
+                document.getElementById('site-status').textContent = this.siteLocked ? 'LOCKED' : 'Online';
+                document.getElementById('site-status').parentElement.parentElement.style.borderTopColor = this.siteLocked ? '#e74c3c' : '#27ae60';
+            }
+
+            loadUsers() {
+                const container = document.getElementById('users-list');
+                container.innerHTML = '';
+
+                if (Object.keys(this.users).length === 0) {
+                    container.innerHTML = '<div class="no-content">No users registered</div>';
+                    return;
+                }
+
+                Object.values(this.users).forEach(user => {
+                    const userEl = document.createElement('div');
+                    userEl.className = 'user-item';
+                    userEl.innerHTML = `
+                        <div class="item-info">
+                            <div><strong>${user.username}</strong> (${user.email})</div>
+                            <div style="font-size: 0.9rem; color: #666;">Posts: ${user.posts} | Joined: ${user.joined}</div>
+                        </div>
+                        <div class="item-actions">
+                            <span class="status-badge ${user.banned ? 'status-locked' : 'status-online'}">${user.banned ? 'BANNED' : 'ACTIVE'}</span>
+                            <button class="btn btn-danger btn-small" onclick="app.banUser('${user.id}')">Ban</button>
+                            <button class="btn btn-warning btn-small" onclick="app.deleteUser('${user.id}')">Delete</button>
+                        </div>
+                    `;
+                    container.appendChild(userEl);
+                });
+            }
+
+            loadPosts() {
+                const container = document.getElementById('posts-list');
+                container.innerHTML = '';
+
+                if (this.posts.length === 0) {
+                    container.innerHTML = '<div class="no-content">No posts found</div>';
+                    return;
+                }
+
+                this.posts.forEach((post, index) => {
+                    const postEl = document.createElement('div');
+                    postEl.className = 'post-item';
+                    postEl.innerHTML = `
+                        <div class="item-info">
+                            <div><strong>${post.author}</strong></div>
+                            <div style="font-size: 0.9rem; color: #666;">${post.caption.substring(0, 50)}...</div>
+                            <div style="font-size: 0.8rem; color: #999;">${new Date(post.timestamp).toLocaleString()}</div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-danger btn-small" onclick="app.deletePost(${index})">Delete</button>
+                        </div>
+                    `;
+                    container.appendChild(postEl);
+                });
+            }
+
+            searchPosts(query) {
+                const filtered = this.posts.filter(post => 
+                    post.caption.toLowerCase().includes(query.toLowerCase()) ||
+                    post.author.toLowerCase().includes(query.toLowerCase())
+                );
+                // Re-render filtered posts
+                this.posts = filtered;
+                this.loadPosts();
+            }
+
+            banUser(userId) {
+                if (confirm('Ban this user?')) {
+                    this.users[userId].banned = true;
+                    localStorage.setItem('yeezy_users', JSON.stringify(this.users));
+                    this.loadUsers();
+                    this.addActivity(`Banned user: ${this.users[userId].username}`);
+                }
+            }
+
+            deleteUser(userId) {
+                if (confirm('Delete this user and all data?')) {
+                    delete this.users[userId];
+                    localStorage.setItem('yeezy_users', JSON.stringify(this.users));
+                    this.loadUsers();
+                    this.addActivity(`Deleted user: ${this.users[userId]?.username || 'Unknown'}`);
+                }
+            }
+
+            deletePost(index) {
+                if (confirm('Delete this post?')) {
+                    this.posts.splice(index, 1);
+                    localStorage.setItem('yeezy_posts', JSON.stringify(this.posts));
+                    this.loadPosts();
+                    this.addActivity('Deleted post');
+                }
+            }
+
+            toggleSiteLock(locked) {
+                this.siteLocked = locked;
+                localStorage.setItem('yeezy_site_locked', locked);
+                document.getElementById('site-lock-status').textContent = locked ? 'Site Locked 🔒' : 'Site Online ✅';
+                this.updateStats();
+                this.addActivity(`Site ${locked ? 'LOCKED' : 'UNLOCKED'}`);
+            }
+
+            lockSite() {
+                if (confirm('Lock the entire site? Users won\'t be able to access.')) {
+                    this.toggleSiteLock(true);
+                }
+            }
+
+            clearAllData() {
+                if (confirm('⚠️ DELETE ALL DATA? Users, posts, everything! This cannot be undone.')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+
+            maintenanceMode() {
+                alert('🚧 Maintenance mode activated! Site will show maintenance page.');
+                localStorage.setItem('yeezy_maintenance', 'true');
+            }
+
+            backupData() {
+                const data = {
+                    users: this.users,
+                    posts: this.posts,
+                    timestamp: new Date().toISOString()
+                };
+                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `yeezy_backup_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            addActivity(message) {
+                this.activity.unshift({
+                    message,
+                    timestamp: new Date().toLocaleString()
+                });
+                localStorage.setItem('yeezy_activity', JSON.stringify(this.activity));
+            }
+        }
+
+        // Global app reference
+        const app = new AdminPanel();
+    </script>
+</body>
+</html>
