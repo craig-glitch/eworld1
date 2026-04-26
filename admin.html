@@ -1,686 +1,612 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YeezyTypeLink - Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>eWorldCart – Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --surface: #0e1119;
+    --card: #13161f;
+    --border: #1e2232;
+    --accent: #00d4aa;
+    --accent2: #ff6b35;
+    --gold: #f5c842;
+    --text: #e8ecf4;
+    --muted: #5a637a;
+    --danger: #ff4757;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --radius: 14px;
+  }
 
-        :root {
-            --primary: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            --bg: #f8f9ff;
-            --card: white;
-            --text: #2c3e50;
-            --border: #e1e8ed;
-            --danger: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
 
-        .hidden { display: none !important; }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,107,53,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,107,53,.03) 1px, transparent 1px);
+    background-size: 36px 36px;
+    pointer-events: none; z-index: 0;
+  }
 
-        /* Loading */
-        .loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: var(--primary);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+  /* ── LOADING ── */
+  .loading-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+  }
+  .loading-overlay .spinner {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent2);
+    animation: spin .8s linear infinite;
+  }
+  .loading-overlay p { color: var(--muted); font-size: .9rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-        .loading i { font-size: 4rem; color: white; margin-bottom: 1rem; }
-        .loading h1 { color: white; font-size: 2rem; font-weight: 700; }
+  /* ── LOGIN GATE ── */
+  .gate {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; position: relative; z-index: 1;
+  }
+  .gate-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 48px 40px;
+    width: 100%; max-width: 380px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6);
+  }
+  .gate-logo {
+    font-family: var(--font-head); font-size: 1.8rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent2), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  .gate-sub { color: var(--muted); font-size: .85rem; margin-bottom: 32px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .form-group input {
+    width: 100%; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; color: var(--text); font-size: .95rem;
+    font-family: var(--font-body); transition: border-color .2s;
+  }
+  .form-group input:focus { outline: none; border-color: var(--accent2); }
+  .btn-admin-login {
+    width: 100%; background: linear-gradient(135deg, var(--accent2), #c0392b);
+    color: #fff; border: none; padding: 14px; border-radius: 10px;
+    font-weight: 700; font-size: 1rem; cursor: pointer;
+    font-family: var(--font-body); margin-top: 8px;
+    transition: opacity .2s;
+  }
+  .btn-admin-login:hover { opacity: .9; }
+  .btn-admin-login:disabled { opacity: .5; cursor: not-allowed; }
+  .err { background: rgba(255,71,87,.1); border: 1px solid rgba(255,71,87,.3); color: var(--danger); border-radius: 8px; padding: 10px 14px; font-size: .85rem; margin-bottom: 14px; display: none; }
+  .err.show { display: block; }
 
-        /* Admin Login */
-        .admin-login {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
+  /* ── MAIN LAYOUT ── */
+  .admin-wrap { display: none; min-height: 100vh; }
+  .admin-wrap.visible { display: flex; flex-direction: column; }
 
-        .admin-card {
-            background: var(--card);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(6,8,16,.95); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-head); font-size: 1.3rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent2), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .logo span { color: var(--muted); -webkit-text-fill-color: var(--muted); font-size: .75rem; font-weight: 400; margin-left: 8px; }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .btn-logout-admin {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); padding: 6px 16px; border-radius: 8px;
+    cursor: pointer; font-size: .82rem; transition: all .2s;
+  }
+  .btn-logout-admin:hover { border-color: var(--danger); color: var(--danger); }
 
-        .admin-logo {
-            font-size: 3rem;
-            background: var(--primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-        }
+  /* Live indicator */
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    display: inline-block; margin-right: 6px;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; } 50% { opacity: .3; }
+  }
 
-        .admin-card h2 {
-            margin-bottom: 0.5rem;
-            color: var(--text);
-        }
+  .main { padding: 28px 24px; position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
 
-        .admin-card p { color: #666; margin-bottom: 2rem; }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .stat-card label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .stat-card .big { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; }
+  .stat-card .big.green { color: var(--accent); }
+  .stat-card .big.orange { color: var(--accent2); }
+  .stat-card .big.gold { color: var(--gold); }
 
-        .admin-input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 16px;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
+  .section-title {
+    font-family: var(--font-head); font-size: 1.1rem; font-weight: 700;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
 
-        .admin-input:focus {
-            outline: none;
-            border-color: #ff6b6b;
-        }
+  .table-wrap {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; margin-bottom: 28px;
+  }
+  .table-header {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 80px 100px 80px 80px 1fr;
+    padding: 14px 20px; background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .5px;
+    gap: 10px;
+  }
+  .user-row {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 80px 100px 80px 80px 1fr;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    align-items: center; gap: 10px; transition: background .15s;
+  }
+  .user-row:last-child { border-bottom: none; }
+  .user-row:hover { background: rgba(255,255,255,.02); }
+  .user-name { font-weight: 600; font-size: .9rem; }
+  .user-phone { color: var(--muted); font-size: .82rem; }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  }
+  .badge.pending { background: rgba(255,107,53,.15); color: var(--accent2); border: 1px solid rgba(255,107,53,.25); }
+  .badge.active  { background: rgba(0,212,170,.12);  color: var(--accent);  border: 1px solid rgba(0,212,170,.25); }
+  .balance-cell { font-family: var(--font-head); font-size: .95rem; color: var(--gold); font-weight: 700; }
 
-        .admin-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+  .amount-select {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    padding: 6px 10px; border-radius: 8px; font-size: .82rem;
+    font-family: var(--font-body); cursor: pointer;
+  }
+  .amount-select:focus { outline: none; border-color: var(--accent); }
 
-        .admin-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-        }
+  /* Custom balance input */
+  .custom-amount {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    padding: 6px 10px; border-radius: 8px; font-size: .82rem;
+    font-family: var(--font-body); width: 80px;
+  }
+  .custom-amount:focus { outline: none; border-color: var(--accent); }
 
-        /* Dashboard */
-        .dashboard {
-            min-height: 100vh;
-        }
+  .btn-activate {
+    background: linear-gradient(135deg, var(--accent), #00b894);
+    color: #000; border: none; padding: 7px 14px; border-radius: 8px;
+    font-weight: 700; font-size: .78rem; cursor: pointer;
+    font-family: var(--font-body); white-space: nowrap; transition: opacity .2s;
+  }
+  .btn-activate:hover { opacity: .85; }
+  .btn-activate:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+  .btn-deactivate {
+    background: transparent; border: 1px solid rgba(255,71,87,.3); color: var(--danger);
+    padding: 7px 14px; border-radius: 8px; font-weight: 600; font-size: .78rem;
+    cursor: pointer; font-family: var(--font-body); white-space: nowrap; transition: all .2s;
+  }
+  .btn-deactivate:hover { background: rgba(255,71,87,.1); }
 
-        .header {
-            background: var(--card);
-            padding: 1.5rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+  /* Edit balance */
+  .btn-edit-bal {
+    background: transparent; border: 1px solid rgba(245,200,66,.3); color: var(--gold);
+    padding: 5px 10px; border-radius: 7px; font-size: .75rem;
+    cursor: pointer; font-family: var(--font-body); transition: all .2s;
+  }
+  .btn-edit-bal:hover { background: rgba(245,200,66,.1); }
 
-        .header h1 {
-            font-size: 1.8rem;
-            background: var(--primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+  /* Delete user */
+  .btn-delete {
+    background: transparent; border: 1px solid rgba(255,71,87,.2); color: var(--danger);
+    padding: 5px 10px; border-radius: 7px; font-size: .75rem;
+    cursor: pointer; font-family: var(--font-body); transition: all .2s;
+  }
+  .btn-delete:hover { background: rgba(255,71,87,.15); }
 
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-        }
+  @media (max-width: 768px) {
+    .table-header { display: none; }
+    .user-row {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 8px; padding: 16px;
+    }
+    .user-row > div:nth-child(1) { grid-column: 1/-1; }
+  }
 
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+  .toast-container {
+    position: fixed; bottom: 20px; right: 20px;
+    display: flex; flex-direction: column; gap: 8px; z-index: 300;
+  }
+  .toast {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px; font-size: .88rem;
+    max-width: 320px; box-shadow: 0 8px 30px rgba(0,0,0,.4);
+    animation: toastIn .3s ease;
+  }
+  .toast.success { border-color: rgba(0,212,170,.4); }
+  .toast.error   { border-color: rgba(255,71,87,.4); }
+  .toast.warn    { border-color: rgba(245,200,66,.4); }
+  @keyframes toastIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform:none; } }
 
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
+  .empty-state { text-align: center; padding: 40px; color: var(--muted); font-size: .9rem; }
 
-        .btn:hover { transform: translateY(-2px); }
+  .search-bar {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 16px; color: var(--text);
+    font-size: .9rem; font-family: var(--font-body); width: 100%; max-width: 320px;
+    margin-bottom: 16px;
+  }
+  .search-bar:focus { outline: none; border-color: var(--accent2); }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            min-height: calc(100vh - 80px);
-        }
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 20px; border-radius: 30px; font-size: .85rem; font-weight: 600;
+    cursor: pointer; transition: all .2s; border: 1px solid var(--border); color: var(--muted);
+    background: transparent;
+  }
+  .tab.active { background: var(--accent2); border-color: var(--accent2); color: #fff; }
 
-        .sidebar {
-            background: var(--card);
-            border-right: 1px solid var(--border);
-            padding: 2rem 0;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            color: #666;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: rgba(255, 107, 107, 0.1);
-            color: var(--text);
-            border-left-color: #ff6b6b;
-        }
-
-        .nav-item i { margin-right: 1rem; width: 20px; }
-
-        .content-area {
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: var(--card);
-            padding: 2rem;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            border-top: 4px solid var(--primary);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover { transform: translateY(-5px); }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label { color: #666; font-size: 1.1rem; }
-
-        .section {
-            background: var(--card);
-            border-radius: 16px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        .section h2 {
-            margin-bottom: 1.5rem;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .user-item, .post-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .user-item:hover, .post-item:hover {
-            background: rgba(255, 107, 107, 0.05);
-            border-color: #ff6b6b;
-        }
-
-        .item-info { flex: 1; }
-        .item-actions { display: flex; gap: 0.5rem; }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .status-online { background: rgba(39, 174, 96, 0.2); color: var(--success); }
-        .status-offline { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
-        .status-locked { background: rgba(243, 156, 18, 0.2); color: var(--warning); }
-
-        .site-controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #ccc;
-            border-radius: 34px;
-            transition: 0.3s;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background: white;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-
-        input:checked + .slider { background: var(--success); }
-        input:checked + .slider:before { transform: translateX(26px); }
-
-        @media (max-width: 768px) {
-            .main-content { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
-            .stats-grid { grid-template-columns: 1fr; }
-        }
-    </style>
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
 </head>
 <body>
-    <!-- Loading -->
-    <div class="loading">
-        <i class="fas fa-shield-alt"></i>
-        <h1>Admin Panel</h1>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Loading admin panel...</p>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- LOGIN GATE -->
+<div class="gate" id="gate" style="display:none;">
+  <div class="gate-box">
+    <div class="gate-logo">eWorldCart</div>
+    <div class="gate-sub">⚙️ Administrator Access Only</div>
+    <div class="err" id="gateErr"></div>
+    <div class="form-group">
+      <label>Admin Username</label>
+      <input type="text" id="adminUser" placeholder="admin" />
+    </div>
+    <div class="form-group">
+      <label>Admin Password</label>
+      <input type="password" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()" />
+    </div>
+    <button class="btn-admin-login" id="loginBtn" onclick="adminLogin()">Access Admin Panel</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-wrap" id="adminWrap">
+  <nav>
+    <div class="logo">eWorldCart Admin <span>Control Center</span></div>
+    <div class="nav-right">
+      <span style="font-size:.8rem;color:var(--muted);"><span class="live-dot"></span>Live · Auto-refreshing</span>
+      <button class="btn-logout-admin" onclick="adminLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <!-- Stats -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card">
+        <label>Total Users</label>
+        <div class="big gold" id="statTotal">0</div>
+      </div>
+      <div class="stat-card">
+        <label>Pending Activation</label>
+        <div class="big orange" id="statPending">0</div>
+      </div>
+      <div class="stat-card">
+        <label>Active Traders</label>
+        <div class="big green" id="statActive">0</div>
+      </div>
+      <div class="stat-card">
+        <label>Total Balance Issued</label>
+        <div class="big gold" id="statIssued">$0</div>
+      </div>
     </div>
 
-    <!-- Admin Login -->
-    <div id="login-container" class="admin-login">
-        <div class="admin-card">
-            <div class="admin-logo">🔥 ADMIN</div>
-            <h2>Admin Login</h2>
-            <p>Enter credentials to access dashboard</p>
-            <input type="password" class="admin-input" id="admin-password" placeholder="Admin Password">
-            <button class="admin-btn" id="admin-login">Enter Dashboard</button>
-            <div id="login-error" style="color: #e74c3c; margin-top: 1rem; font-size: 14px;"></div>
-        </div>
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('pending', this)">⏳ Pending Activation</button>
+      <button class="tab" onclick="switchTab('active', this)">✅ Active Users</button>
+      <button class="tab" onclick="switchTab('all', this)">👥 All Users</button>
     </div>
 
-    <!-- Dashboard -->
-    <div id="dashboard" class="dashboard hidden">
-        <!-- Header -->
-        <header class="header">
-            <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
-            <div class="header-actions">
-                <button class="btn btn-danger" id="lock-site"><i class="fas fa-lock"></i> Lock Site</button>
-                <button class="btn btn-warning" id="clear-data"><i class="fas fa-trash"></i> Clear All</button>
-                <button class="btn btn-primary" id="logout-admin"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            </div>
-        </header>
+    <!-- Search -->
+    <input class="search-bar" id="searchBar" placeholder="Search by name or phone..." oninput="renderUsers()" />
 
-        <div class="main-content">
-            <!-- Sidebar -->
-            <nav class="sidebar">
-                <div class="nav-item active" data-section="overview">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Overview</span>
-                </div>
-                <div class="nav-item" data-section="users">
-                    <i class="fas fa-users"></i>
-                    <span>Users</span>
-                </div>
-                <div class="nav-item" data-section="posts">
-                    <i class="fas fa-images"></i>
-                    <span>Posts</span>
-                </div>
-                <div class="nav-item" data-section="site-control">
-                    <i class="fas fa-cogs"></i>
-                    <span>Site Control</span>
-                </div>
-            </nav>
-
-            <!-- Content -->
-            <main class="content-area">
-                <!-- Overview -->
-                <section id="overview-section" class="section active">
-                    <h2><i class="fas fa-chart-bar"></i> Platform Stats</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number" id="total-users">0</div>
-                            <div class="stat-label">Total Users</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="total-posts">0</div>
-                            <div class="stat-label">Total Posts</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="active-users">0</div>
-                            <div class="stat-label">Active Today</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="site-status">Online</div>
-                            <div class="stat-label">Site Status</div>
-                        </div>
-                    </div>
-
-                    <h2><i class="fas fa-clock"></i> Recent Activity</h2>
-                    <div class="section">
-                        <div id="activity-list">
-                            <div class="no-content">No recent activity</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Users -->
-                <section id="users-section" class="section">
-                    <h2><i class="fas fa-users"></i> User Management</h2>
-                    <div id="users-list">
-                        <div class="no-content">No users found</div>
-                    </div>
-                </section>
-
-                <!-- Posts -->
-                <section id="posts-section" class="section">
-                    <h2><i class="fas fa-images"></i> Post Management</h2>
-                    <input type="text" id="post-search" placeholder="Search posts..." class="admin-input" style="margin-bottom: 1rem;">
-                    <div id="posts-list">
-                        <div class="no-content">No posts found</div>
-                    </div>
-                </section>
-
-                <!-- Site Control -->
-                <section id="site-control-section" class="section">
-                    <h2><i class="fas fa-cogs"></i> Site Controls</h2>
-                    <div class="site-controls">
-                        <label class="switch">
-                            <input type="checkbox" id="site-lock-toggle">
-                            <span class="slider"></span>
-                        </label>
-                        <span id="site-lock-status">Site Online</span>
-                    </div>
-                    <div style="margin-top: 2rem;">
-                        <button class="btn btn-danger" id="maintenance-mode" style="margin-right: 1rem;">Maintenance Mode</button>
-                        <button class="btn btn-success" id="backup-data">Backup Data</button>
-                    </div>
-                </section>
-            </main>
-        </div>
+    <!-- Table -->
+    <div class="section-title"><div class="dot"></div><span id="tableTitle">Users Awaiting Activation</span></div>
+    <div class="table-wrap" id="tableWrap">
+      <div class="table-header">
+        <div>Name</div>
+        <div>Phone</div>
+        <div>Status</div>
+        <div>Balance</div>
+        <div>Buys Today</div>
+        <div>Sells Today</div>
+        <div>Action</div>
+      </div>
+      <div id="userList"></div>
     </div>
+  </div>
+</div>
 
-    <script>
-        class AdminPanel {
-            constructor() {
-                this.adminPassword = 'yeezyadmin2026'; // Change this password
-                this.isLoggedIn = false;
-                this.siteLocked = localStorage.getItem('yeezy_site_locked') === 'true';
-                this.init();
-            }
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, get, update, remove, onValue }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-            init() {
-                setTimeout(() => {
-                    document.querySelector('.loading').remove();
-                }, 2000);
+  // ── Firebase Config ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-N4xxeqzJ-bBsYV8tlJXwNLBFS26AkKY",
+    authDomain: "eworldcart-81cc1.firebaseapp.com",
+    databaseURL: "https://eworldcart-81cc1-default-rtdb.firebaseio.com",
+    projectId: "eworldcart-81cc1",
+    storageBucket: "eworldcart-81cc1.firebasestorage.app",
+    messagingSenderId: "570790822977",
+    appId: "1:570790822977:web:8ad58400d4202b21b272c0",
+    measurementId: "G-VJGBW5T6RY"
+  };
 
-                this.bindEvents();
-                this.loadData();
-            }
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
 
-            bindEvents() {
-                // Admin login
-                document.getElementById('admin-login').addEventListener('click', () => this.adminLogin());
-                document.getElementById('admin-password').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') this.adminLogin();
-                });
+  // ── Admin Credentials (change these!) ──
+  const ADMIN_USER = 'admin';
+  const ADMIN_PASS = 'ewc@admin2024';
 
-                // Navigation
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.addEventListener('click', (e) => this.navigate(e));
-                });
+  let allUsersCache = {};
+  let currentTab    = 'pending';
+  let usersListener = null;
 
-                // Header actions
-                document.getElementById('lock-site').addEventListener('click', () => this.lockSite());
-                document.getElementById('clear-data').addEventListener('click', () => this.clearAllData());
-                document.getElementById('logout-admin').addEventListener('click', () => this.logoutAdmin());
+  function phoneKey(phone) {
+    return phone.replace(/[.#$[\]]/g, '_');
+  }
 
-                // Site controls
-                document.getElementById('site-lock-toggle').addEventListener('change', (e) => this.toggleSiteLock(e.target.checked));
-                document.getElementById('maintenance-mode').addEventListener('click', () => this.maintenanceMode());
-                document.getElementById('backup-data').addEventListener('click', () => this.backupData());
+  // ── Auth ──
+  window.adminLogin = async function() {
+    const u   = document.getElementById('adminUser').value.trim();
+    const p   = document.getElementById('adminPass').value;
+    const err = document.getElementById('gateErr');
+    const btn = document.getElementById('loginBtn');
+    err.classList.remove('show');
 
-                // Search
-                document.getElementById('post-search').addEventListener('input', (e) => this.searchPosts(e.target.value));
-            }
+    if (u !== ADMIN_USER || p !== ADMIN_PASS) {
+      err.textContent = 'Invalid credentials. Access denied.';
+      err.classList.add('show');
+      return;
+    }
 
-            adminLogin() {
-                const password = document.getElementById('admin-password').value;
-                if (password === this.adminPassword) {
-                    this.isLoggedIn = true;
-                    document.getElementById('login-container').classList.add('hidden');
-                    document.getElementById('dashboard').classList.remove('hidden');
-                    this.updateStats();
-                    console.log('✅ Admin logged in');
-                } else {
-                    document.getElementById('login-error').textContent = '❌ Wrong password!';
-                }
-            }
+    btn.disabled = true; btn.textContent = 'Connecting...';
+    document.getElementById('gate').style.display      = 'none';
+    document.getElementById('adminWrap').classList.add('visible');
 
-            logoutAdmin() {
-                this.isLoggedIn = false;
-                document.getElementById('dashboard').classList.add('hidden');
-                document.getElementById('login-container').classList.remove('hidden');
-                document.getElementById('admin-password').value = '';
-            }
+    // Subscribe to real-time updates
+    usersListener = onValue(ref(db, 'users'), snap => {
+      allUsersCache = snap.exists() ? snap.val() : {};
+      renderStats();
+      renderUsers();
+    });
 
-            navigate(e) {
-                e.preventDefault();
-                const section = e.currentTarget.dataset.section;
+    btn.disabled = false; btn.textContent = 'Access Admin Panel';
+  };
 
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-                e.currentTarget.classList.add('active');
+  window.adminLogout = function() {
+    if (usersListener) { usersListener(); usersListener = null; }
+    allUsersCache = {};
+    document.getElementById('gate').style.display = 'flex';
+    document.getElementById('adminWrap').classList.remove('visible');
+    document.getElementById('adminUser').value = '';
+    document.getElementById('adminPass').value = '';
+  };
 
-                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-                document.getElementById(`${section}-section`).classList.add('active');
+  // ── Tabs ──
+  window.switchTab = function(tab, el) {
+    currentTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const titles = { pending: 'Users Awaiting Activation', active: 'Active Traders', all: 'All Registered Users' };
+    document.getElementById('tableTitle').textContent = titles[tab];
+    renderUsers();
+  };
 
-                if (section === 'users') this.loadUsers();
-                if (section === 'posts') this.loadPosts();
-            }
+  // ── Render Stats ──
+  function renderStats() {
+    const arr     = Object.values(allUsersCache);
+    const pending = arr.filter(u => u.status === 'pending').length;
+    const active  = arr.filter(u => u.status === 'active').length;
+    const issued  = arr.reduce((s, u) => s + (u.startAmount || 0), 0);
+    document.getElementById('statTotal').textContent   = arr.length;
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statActive').textContent  = active;
+    document.getElementById('statIssued').textContent  = '$' + issued.toFixed(2);
+  }
 
-            loadData() {
-                this.users = JSON.parse(localStorage.getItem('yeezy_users')) || {};
-                this.posts = JSON.parse(localStorage.getItem('yeezy_posts')) || [];
-                this.activity = JSON.parse(localStorage.getItem('yeezy_activity')) || [];
-            }
+  // ── Render Users ──
+  function renderUsers() {
+    const search = document.getElementById('searchBar').value.toLowerCase();
+    let arr = Object.values(allUsersCache);
 
-            updateStats() {
-                document.getElementById('total-users').textContent = Object.keys(this.users).length;
-                document.getElementById('total-posts').textContent = this.posts.length;
-                document.getElementById('active-users').textContent = Math.floor(Math.random() * 50) + 10;
-                document.getElementById('site-status').textContent = this.siteLocked ? 'LOCKED' : 'Online';
-                document.getElementById('site-status').parentElement.parentElement.style.borderTopColor = this.siteLocked ? '#e74c3c' : '#27ae60';
-            }
+    if (currentTab === 'pending') arr = arr.filter(u => u.status === 'pending');
+    if (currentTab === 'active')  arr = arr.filter(u => u.status === 'active');
+    if (search) arr = arr.filter(u =>
+      (u.name || '').toLowerCase().includes(search) ||
+      (u.phone || '').includes(search)
+    );
 
-            loadUsers() {
-                const container = document.getElementById('users-list');
-                container.innerHTML = '';
+    arr.sort((a, b) => b.createdAt - a.createdAt);
 
-                if (Object.keys(this.users).length === 0) {
-                    container.innerHTML = '<div class="no-content">No users registered</div>';
-                    return;
-                }
+    const list = document.getElementById('userList');
+    if (arr.length === 0) {
+      list.innerHTML = '<div class="empty-state">No users found in this category.</div>';
+      return;
+    }
 
-                Object.values(this.users).forEach(user => {
-                    const userEl = document.createElement('div');
-                    userEl.className = 'user-item';
-                    userEl.innerHTML = `
-                        <div class="item-info">
-                            <div><strong>${user.username}</strong> (${user.email})</div>
-                            <div style="font-size: 0.9rem; color: #666;">Posts: ${user.posts} | Joined: ${user.joined}</div>
-                        </div>
-                        <div class="item-actions">
-                            <span class="status-badge ${user.banned ? 'status-locked' : 'status-online'}">${user.banned ? 'BANNED' : 'ACTIVE'}</span>
-                            <button class="btn btn-danger btn-small" onclick="app.banUser('${user.id}')">Ban</button>
-                            <button class="btn btn-warning btn-small" onclick="app.deleteUser('${user.id}')">Delete</button>
-                        </div>
-                    `;
-                    container.appendChild(userEl);
-                });
-            }
+    list.innerHTML = arr.map(user => {
+      const joinDate  = new Date(user.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const profit    = parseFloat(((user.balance || 0) - (user.startAmount || 0)).toFixed(2));
+      const isPending = user.status === 'pending';
+      const safePhone = escAttr(user.phone);
+      const safeName  = escHtml(user.name);
 
-            loadPosts() {
-                const container = document.getElementById('posts-list');
-                container.innerHTML = '';
+      return `
+        <div class="user-row">
+          <div>
+            <div class="user-name">${safeName}</div>
+            <div style="font-size:.72rem;color:var(--muted);">Joined: ${joinDate}</div>
+          </div>
+          <div class="user-phone">${escHtml(user.phone)}</div>
+          <div><span class="badge ${user.status}">${user.status}</span></div>
+          <div>
+            <div class="balance-cell">$${(user.balance || 0).toFixed(2)}</div>
+            ${!isPending ? `<div style="font-size:.7rem;color:${profit >= 0 ? 'var(--accent)' : 'var(--danger)'}">P&L: ${profit >= 0 ? '+' : ''}$${Math.abs(profit).toFixed(2)}</div>` : ''}
+            ${!isPending ? `<button class="btn-edit-bal" onclick="editBalance('${safePhone}')">✏️ Edit</button>` : ''}
+          </div>
+          <div style="font-size:.88rem;">${user.buyToday || 0}/5</div>
+          <div style="font-size:.88rem;">${user.sellToday || 0}/5</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            ${isPending ? `
+              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                <select class="amount-select" id="amt_${safePhone}">
+                  <option value="15">$15</option>
+                  <option value="20">$20</option>
+                  <option value="35">$35</option>
+                  <option value="55">$55</option>
+                  <option value="100">$100</option>
+                </select>
+                <input class="custom-amount" type="number" id="custom_${safePhone}" placeholder="Custom $" min="1" step="0.01" />
+                <button class="btn-activate" onclick="activateUser('${safePhone}')">✅ Activate</button>
+              </div>
+            ` : `
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                <div style="font-size:.72rem;color:var(--muted);">Start: $${(user.startAmount || 0).toFixed(2)}</div>
+                <button class="btn-deactivate" onclick="deactivateUser('${safePhone}')">Deactivate</button>
+              </div>
+            `}
+            <button class="btn-delete" onclick="deleteUser('${safePhone}')">🗑 Delete</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
 
-                if (this.posts.length === 0) {
-                    container.innerHTML = '<div class="no-content">No posts found</div>';
-                    return;
-                }
+  // Make renderUsers accessible for oninput
+  window.renderUsers = renderUsers;
 
-                this.posts.forEach((post, index) => {
-                    const postEl = document.createElement('div');
-                    postEl.className = 'post-item';
-                    postEl.innerHTML = `
-                        <div class="item-info">
-                            <div><strong>${post.author}</strong></div>
-                            <div style="font-size: 0.9rem; color: #666;">${post.caption.substring(0, 50)}...</div>
-                            <div style="font-size: 0.8rem; color: #999;">${new Date(post.timestamp).toLocaleString()}</div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn btn-danger btn-small" onclick="app.deletePost(${index})">Delete</button>
-                        </div>
-                    `;
-                    container.appendChild(postEl);
-                });
-            }
+  // ── Actions ──
+  window.activateUser = async function(phone) {
+    const key   = phoneKey(phone);
+    // find the real phone key in cache
+    const user  = Object.values(allUsersCache).find(u => phoneKey(u.phone) === key || u.phone === phone);
+    if (!user) return;
 
-            searchPosts(query) {
-                const filtered = this.posts.filter(post => 
-                    post.caption.toLowerCase().includes(query.toLowerCase()) ||
-                    post.author.toLowerCase().includes(query.toLowerCase())
-                );
-                // Re-render filtered posts
-                this.posts = filtered;
-                this.loadPosts();
-            }
+    const selectEl = document.getElementById('amt_' + phone);
+    const customEl = document.getElementById('custom_' + phone);
+    let amount     = parseFloat(customEl && customEl.value ? customEl.value : (selectEl ? selectEl.value : 15));
+    if (isNaN(amount) || amount <= 0) amount = 15;
 
-            banUser(userId) {
-                if (confirm('Ban this user?')) {
-                    this.users[userId].banned = true;
-                    localStorage.setItem('yeezy_users', JSON.stringify(this.users));
-                    this.loadUsers();
-                    this.addActivity(`Banned user: ${this.users[userId].username}`);
-                }
-            }
+    try {
+      await update(ref(db, 'users/' + phoneKey(user.phone)), {
+        status: 'active',
+        balance: amount,
+        startAmount: amount
+      });
+      toast('success', '✅ ' + user.name + ' activated with $' + amount.toFixed(2) + ' starting balance.');
+    } catch (e) {
+      toast('error', 'Failed: ' + e.message);
+    }
+  };
 
-            deleteUser(userId) {
-                if (confirm('Delete this user and all data?')) {
-                    delete this.users[userId];
-                    localStorage.setItem('yeezy_users', JSON.stringify(this.users));
-                    this.loadUsers();
-                    this.addActivity(`Deleted user: ${this.users[userId]?.username || 'Unknown'}`);
-                }
-            }
+  window.deactivateUser = async function(phone) {
+    const user = Object.values(allUsersCache).find(u => phoneKey(u.phone) === phone || u.phone === phone);
+    if (!user) return;
+    if (!confirm('Deactivate ' + user.name + '? They will lose marketplace access.')) return;
+    try {
+      await update(ref(db, 'users/' + phoneKey(user.phone)), { status: 'pending' });
+      toast('warn', '⚠️ ' + user.name + ' has been deactivated.');
+    } catch (e) {
+      toast('error', 'Failed: ' + e.message);
+    }
+  };
 
-            deletePost(index) {
-                if (confirm('Delete this post?')) {
-                    this.posts.splice(index, 1);
-                    localStorage.setItem('yeezy_posts', JSON.stringify(this.posts));
-                    this.loadPosts();
-                    this.addActivity('Deleted post');
-                }
-            }
+  window.deleteUser = async function(phone) {
+    const user = Object.values(allUsersCache).find(u => phoneKey(u.phone) === phone || u.phone === phone);
+    if (!user) return;
+    if (!confirm('Permanently DELETE ' + user.name + '? This cannot be undone!')) return;
+    try {
+      await remove(ref(db, 'users/' + phoneKey(user.phone)));
+      toast('error', '🗑 ' + user.name + ' deleted permanently.');
+    } catch (e) {
+      toast('error', 'Failed: ' + e.message);
+    }
+  };
 
-            toggleSiteLock(locked) {
-                this.siteLocked = locked;
-                localStorage.setItem('yeezy_site_locked', locked);
-                document.getElementById('site-lock-status').textContent = locked ? 'Site Locked 🔒' : 'Site Online ✅';
-                this.updateStats();
-                this.addActivity(`Site ${locked ? 'LOCKED' : 'UNLOCKED'}`);
-            }
+  window.editBalance = async function(phone) {
+    const user = Object.values(allUsersCache).find(u => phoneKey(u.phone) === phone || u.phone === phone);
+    if (!user) return;
+    const newBal = prompt('Enter new balance for ' + user.name + ' (current: $' + (user.balance || 0).toFixed(2) + '):', (user.balance || 0).toFixed(2));
+    if (newBal === null) return;
+    const amount = parseFloat(newBal);
+    if (isNaN(amount) || amount < 0) { toast('error', 'Invalid amount.'); return; }
+    try {
+      await update(ref(db, 'users/' + phoneKey(user.phone)), { balance: amount });
+      toast('success', '✅ Balance updated to $' + amount.toFixed(2) + ' for ' + user.name);
+    } catch (e) {
+      toast('error', 'Failed: ' + e.message);
+    }
+  };
 
-            lockSite() {
-                if (confirm('Lock the entire site? Users won\'t be able to access.')) {
-                    this.toggleSiteLock(true);
-                }
-            }
+  // ── Toast ──
+  function toast(type, msg) {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4500);
+  }
 
-            clearAllData() {
-                if (confirm('⚠️ DELETE ALL DATA? Users, posts, everything! This cannot be undone.')) {
-                    localStorage.clear();
-                    location.reload();
-                }
-            }
+  function escHtml(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function escAttr(str) {
+    return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  }
 
-            maintenanceMode() {
-                alert('🚧 Maintenance mode activated! Site will show maintenance page.');
-                localStorage.setItem('yeezy_maintenance', 'true');
-            }
-
-            backupData() {
-                const data = {
-                    users: this.users,
-                    posts: this.posts,
-                    timestamp: new Date().toISOString()
-                };
-                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `yeezy_backup_${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                URL.revokeObjectURL(url);
-            }
-
-            addActivity(message) {
-                this.activity.unshift({
-                    message,
-                    timestamp: new Date().toLocaleString()
-                });
-                localStorage.setItem('yeezy_activity', JSON.stringify(this.activity));
-            }
-        }
-
-        // Global app reference
-        const app = new AdminPanel();
-    </script>
+  // ── Init ──
+  document.getElementById('loadingOverlay').style.display = 'none';
+  document.getElementById('gate').style.display           = 'flex';
+</script>
 </body>
 </html>
