@@ -33,7 +33,6 @@
     overflow-x: hidden;
   }
 
-  /* ── BG GRID ── */
   body::before {
     content: '';
     position: fixed;
@@ -46,11 +45,9 @@
     z-index: 0;
   }
 
-  /* ── SCREENS ── */
   .screen { display: none; position: relative; z-index: 1; }
   .screen.active { display: block; }
 
-  /* ── NAV ── */
   nav {
     position: sticky; top: 0; z-index: 100;
     background: rgba(10,12,16,.92);
@@ -89,7 +86,6 @@
   }
   .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
 
-  /* ── HERO / LANDING ── */
   .landing {
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -142,7 +138,6 @@
   }
   .stat-label { font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
 
-  /* ── AUTH MODALS ── */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 200;
     background: rgba(0,0,0,.7); backdrop-filter: blur(8px);
@@ -182,6 +177,7 @@
     font-family: var(--font-body); margin-top: 8px; transition: opacity .2s;
   }
   .btn-full:hover { opacity: .9; }
+  .btn-full:disabled { opacity: .5; cursor: not-allowed; }
   .modal-switch { text-align: center; margin-top: 20px; font-size: .9rem; color: var(--muted); }
   .modal-switch a { color: var(--accent); cursor: pointer; text-decoration: none; }
   .modal-close { float: right; background: none; border: none; color: var(--muted); font-size: 1.3rem; cursor: pointer; }
@@ -190,7 +186,6 @@
   .success-msg { background: rgba(0,212,170,.1); border: 1px solid rgba(0,212,170,.3); color: var(--accent); border-radius: 8px; padding: 10px 14px; font-size: .85rem; margin-bottom: 14px; display: none; }
   .success-msg.show { display: block; }
 
-  /* ── WELCOME BANNER ── */
   .welcome-banner {
     background: linear-gradient(135deg, rgba(0,212,170,.12), rgba(245,200,66,.08));
     border: 1px solid rgba(0,212,170,.25);
@@ -204,7 +199,6 @@
     color: var(--gold); font-weight: 700; font-size: 1rem;
   }
 
-  /* ── PENDING NOTICE ── */
   .pending-notice {
     background: rgba(255,107,53,.08);
     border: 1px solid rgba(255,107,53,.3);
@@ -215,7 +209,6 @@
   .pending-notice h3 { font-family: var(--font-head); font-size: 1.3rem; margin-bottom: 8px; color: var(--accent2); }
   .pending-notice p { color: var(--muted); line-height: 1.6; }
 
-  /* ── MARKETPLACE ── */
   .market-header {
     padding: 20px 20px 0;
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
@@ -227,7 +220,6 @@
   }
   .price-ticker span { color: var(--accent); font-weight: 600; }
 
-  /* ── PRODUCT GRID ── */
   .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -278,7 +270,6 @@
   .btn-buy:hover { opacity: .85; }
   .btn-buy:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
 
-  /* ── OWNED ITEMS ── */
   .section-title {
     font-family: var(--font-head); font-size: 1.2rem; font-weight: 700;
     padding: 20px 20px 0; display: flex; align-items: center; gap: 10px;
@@ -313,7 +304,6 @@
   .btn-sell:hover { opacity: .85; }
   .btn-sell:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
 
-  /* ── PORTFOLIO / WALLET PANEL ── */
   .wallet-panel {
     margin: 20px; background: var(--card);
     border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;
@@ -333,7 +323,6 @@
   }
   .btn-withdraw:hover { opacity: .9; }
 
-  /* ── STOCK NOTICE ── */
   .stock-notice {
     margin: 0 20px 20px;
     background: linear-gradient(135deg, rgba(245,200,66,.08), rgba(0,212,170,.06));
@@ -345,7 +334,6 @@
   .stock-notice p { font-size: .87rem; color: var(--muted); line-height: 1.5; }
   .stock-notice p strong { color: var(--gold); }
 
-  /* ── TOAST ── */
   .toast-container {
     position: fixed; bottom: 20px; right: 20px;
     display: flex; flex-direction: column; gap: 8px; z-index: 300;
@@ -362,7 +350,6 @@
   .toast.warn { border-color: rgba(245,200,66,.4); }
   @keyframes toastIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform:none; } }
 
-  /* ── LIMIT BARS ── */
   .limit-bar {
     margin: 0 20px 6px;
     display: flex; align-items: center; gap: 10px;
@@ -371,10 +358,8 @@
   .limit-bar .dots { display: flex; gap: 4px; }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); }
   .dot.used { background: var(--accent2); }
-  .dot.buy { }
   .dot.sell-dot.used { background: var(--accent); }
 
-  /* ── PLACEHOLDER IMG ── */
   .img-placeholder {
     width: 100%; height: 100%;
     background: linear-gradient(135deg, #1a1e2c, #252a38);
@@ -383,13 +368,34 @@
   }
   .img-placeholder .emoji { font-size: 2.5rem; }
 
-  /* scrollbar */
+  /* Loading overlay */
+  .loading-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+  }
+  .loading-overlay .spinner {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    animation: spin .8s linear infinite;
+  }
+  .loading-overlay p { color: var(--muted); font-size: .9rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 </style>
 </head>
 <body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p>Connecting to eWorldCart...</p>
+</div>
 
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
@@ -408,9 +414,9 @@
     </div>
     <div class="form-group">
       <label>Password</label>
-      <input type="password" id="loginPass" placeholder="••••••••" />
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()" />
     </div>
-    <button class="btn-full" onclick="handleLogin()">Sign In</button>
+    <button class="btn-full" id="loginBtn" onclick="handleLogin()">Sign In</button>
     <div class="modal-switch">Don't have an account? <a onclick="switchToRegister()">Create one</a></div>
   </div>
 
@@ -431,9 +437,9 @@
     </div>
     <div class="form-group">
       <label>Password</label>
-      <input type="password" id="regPass" placeholder="Create a password" />
+      <input type="password" id="regPass" placeholder="Create a password" onkeydown="if(event.key==='Enter')handleRegister()" />
     </div>
-    <button class="btn-full" onclick="handleRegister()">Create Account</button>
+    <button class="btn-full" id="regBtn" onclick="handleRegister()">Create Account</button>
     <div class="modal-switch">Already have an account? <a onclick="switchToLogin()">Sign in</a></div>
   </div>
 </div>
@@ -569,403 +575,430 @@
   </div>
 </div>
 
-<script>
-// ─────────────────────────────────────────────
-// STORAGE HELPERS (localStorage as DB)
-// ─────────────────────────────────────────────
-const DB = {
-  get: k => { try { return JSON.parse(localStorage.getItem('ewc_'+k)); } catch { return null; } },
-  set: (k,v) => localStorage.setItem('ewc_'+k, JSON.stringify(v)),
-  del: k => localStorage.removeItem('ewc_'+k)
-};
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, get, update, onValue, child }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-function getUsers() { return DB.get('users') || {}; }
-function saveUsers(u) { DB.set('users', u); }
-function currentUser() { return DB.get('current'); }
-function setCurrentUser(u) { DB.set('current', u); }
-function clearCurrentUser() { DB.del('current'); }
-
-// ─────────────────────────────────────────────
-// PRODUCTS CATALOG
-// ─────────────────────────────────────────────
-const PRODUCTS = [
-  // Bags
-  { id:'bag1',   name:'Leather Handbag',       file:'bag1.jpeg',      emoji:'👜', basePrice:12.00, cat:'Bags' },
-  { id:'bag2',   name:'Canvas Tote Bag',        file:'bag2.jpeg',      emoji:'🎒', basePrice:8.50,  cat:'Bags' },
-  { id:'bag3',   name:'classy purse',           file:'bag3.jpeg',      emoji:'🎒', basePrice:22.00, cat:'Bags' },
-  { id:'bag4',   name:'Clutch Purse',           file:'bag4.jpeg',      emoji:'👛', basePrice:9.00,  cat:'Bags' },
-  { id:'bag5',   name:'Travel Duffel',          file:'bag5.jpeg',      emoji:'🧳', basePrice:18.00, cat:'Bags' },
-  // Tracksuits
-  { id:'ts1',    name:'Classic Tracksuit',      file:'tracksuit1.jpeg', emoji:'🏃', basePrice:25.00, cat:'Tracksuits' },
-  { id:'ts2',    name:'Slim Fit Tracksuit',     file:'tracksuit2.jpeg', emoji:'🏃', basePrice:28.00, cat:'Tracksuits' },
-  { id:'ts3',    name:'Fleece Tracksuit',       file:'tracksuit3.jpeg', emoji:'🧥', basePrice:32.00, cat:'Tracksuits' },
-  { id:'ts4',    name:'Striped Tracksuit',      file:'tracksuit4.jpeg', emoji:'🏃', basePrice:27.00, cat:'Tracksuits' },
-  { id:'ts5',    name:'Sport Tracksuit',        file:'tracksuit5.jpeg', emoji:'🏋️', basePrice:30.00, cat:'Tracksuits' },
-  { id:'ts6',    name:'Premium Tracksuit',      file:'tracksuit6.jpeg', emoji:'🧥', basePrice:38.00, cat:'Tracksuits' },
-  // Torches
-  { id:'torch1', name:'LED Flashlight 500L',    file:'torch1.jpeg',    emoji:'🔦', basePrice:7.00,  cat:'Torches' },
-  { id:'torch2', name:'Heavy Duty Torch',       file:'torch2.jpeg',    emoji:'🔦', basePrice:10.50, cat:'Torches' },
-  // Jeans
-  { id:'jean1',  name:'Slim Denim Jeans',       file:'jean1.jpeg',     emoji:'👖', basePrice:18.00, cat:'Jeans' },
-  { id:'jean2',  name:'Straight Cut Jeans',     file:'jean2.jpeg',     emoji:'👖', basePrice:20.00, cat:'Jeans' },
-  { id:'jean3',  name:'Bootcut Jeans',          file:'jean3.jpeg',     emoji:'👖', basePrice:17.50, cat:'Jeans' },
-  { id:'jean4',  name:'Ripped Skinny Jeans',    file:'jean4.jpeg',     emoji:'👖', basePrice:22.00, cat:'Jeans' },
-];
-
-// Live prices – realistic random walk
-let livePrices = {};
-let prevPrices = {};
-
-function initPrices() {
-  PRODUCTS.forEach(p => {
-    if (!livePrices[p.id]) livePrices[p.id] = p.basePrice;
-    prevPrices[p.id] = livePrices[p.id];
-  });
-}
-
-function fluctuatePrices() {
-  prevPrices = {...livePrices};
-  PRODUCTS.forEach(p => {
-    const cur = livePrices[p.id];
-    // Random walk: ±8–15% per tick with gentle mean-reversion
-    const step = (Math.random() * 0.23) - 0.08; // -8% to +15%
-    const reversion = (p.basePrice - cur) / p.basePrice * 0.12;
-    const newPrice = cur * (1 + step + reversion);
-    const min = p.basePrice * 0.60;
-    const max = p.basePrice * 1.65;
-    livePrices[p.id] = parseFloat(Math.min(max, Math.max(min, newPrice)).toFixed(2));
-  });
-}
-
-// ─────────────────────────────────────────────
-// SCREENS
-// ─────────────────────────────────────────────
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// ─────────────────────────────────────────────
-// AUTH MODAL
-// ─────────────────────────────────────────────
-function openLogin() { document.getElementById('authOverlay').classList.add('open'); showModal('loginModal'); }
-function openRegister() { document.getElementById('authOverlay').classList.add('open'); showModal('registerModal'); }
-function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); }
-function switchToLogin() { showModal('loginModal'); }
-function switchToRegister() { showModal('registerModal'); }
-function showModal(id) {
-  document.querySelectorAll('.modal').forEach(m => m.style.display='none');
-  document.getElementById(id).style.display='block';
-}
-
-function handleRegister() {
-  const name = document.getElementById('regName').value.trim();
-  const phone = document.getElementById('regPhone').value.trim();
-  const pass = document.getElementById('regPass').value;
-  const err = document.getElementById('regError');
-  const suc = document.getElementById('regSuccess');
-  err.classList.remove('show'); suc.classList.remove('show');
-
-  if (!name || !phone || !pass) { err.textContent='Please fill in all fields.'; err.classList.add('show'); return; }
-  if (pass.length < 6) { err.textContent='Password must be at least 6 characters.'; err.classList.add('show'); return; }
-
-  const users = getUsers();
-  if (users[phone]) { err.textContent='This phone number is already registered.'; err.classList.add('show'); return; }
-
-  const user = {
-    name, phone, pass,
-    status: 'pending', // 'pending' | 'active'
-    balance: 0,
-    startAmount: 0,
-    ownedItems: [], // [{id, buyPrice, qty}]
-    buyToday: 0, sellToday: 0,
-    lastTradeDate: '',
-    profit: 0,
-    createdAt: Date.now()
+  // ── Firebase Config ──
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-N4xxeqzJ-bBsYV8tlJXwNLBFS26AkKY",
+    authDomain: "eworldcart-81cc1.firebaseapp.com",
+    databaseURL: "https://eworldcart-81cc1-default-rtdb.firebaseio.com",
+    projectId: "eworldcart-81cc1",
+    storageBucket: "eworldcart-81cc1.firebasestorage.app",
+    messagingSenderId: "570790822977",
+    appId: "1:570790822977:web:8ad58400d4202b21b272c0",
+    measurementId: "G-VJGBW5T6RY"
   };
-  users[phone] = user;
-  saveUsers(users);
-  setCurrentUser(phone);
 
-  suc.textContent='Account created! Logging you in...';
-  suc.classList.add('show');
-  setTimeout(() => { closeAuth(); loadDashboard(); }, 1200);
-}
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
 
-function handleLogin() {
-  const phone = document.getElementById('loginPhone').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  const err = document.getElementById('loginError');
-  err.classList.remove('show');
+  // ── Session (in-memory only) ──
+  let sessionPhone = null;
+  let liveUserData  = null;
+  let userListener  = null;
 
-  const users = getUsers();
-  if (!users[phone] || users[phone].pass !== pass) {
-    err.textContent='Invalid phone number or password.'; err.classList.add('show'); return;
+  // ── Products Catalog ──
+  const PRODUCTS = [
+    { id:'bag1',   name:'Leather Handbag',      file:'bag1.jpeg',       emoji:'👜', basePrice:12.00, cat:'Bags' },
+    { id:'bag2',   name:'Canvas Tote Bag',       file:'bag2.jpeg',       emoji:'🎒', basePrice:8.50,  cat:'Bags' },
+    { id:'bag3',   name:'Classy Purse',          file:'bag3.jpeg',       emoji:'🎒', basePrice:22.00, cat:'Bags' },
+    { id:'bag4',   name:'Clutch Purse',          file:'bag4.jpeg',       emoji:'👛', basePrice:9.00,  cat:'Bags' },
+    { id:'bag5',   name:'Travel Duffel',         file:'bag5.jpeg',       emoji:'🧳', basePrice:18.00, cat:'Bags' },
+    { id:'ts1',    name:'Classic Tracksuit',     file:'tracksuit1.jpeg', emoji:'🏃', basePrice:25.00, cat:'Tracksuits' },
+    { id:'ts2',    name:'Slim Fit Tracksuit',    file:'tracksuit2.jpeg', emoji:'🏃', basePrice:28.00, cat:'Tracksuits' },
+    { id:'ts3',    name:'Fleece Tracksuit',      file:'tracksuit3.jpeg', emoji:'🧥', basePrice:32.00, cat:'Tracksuits' },
+    { id:'ts4',    name:'Striped Tracksuit',     file:'tracksuit4.jpeg', emoji:'🏃', basePrice:27.00, cat:'Tracksuits' },
+    { id:'ts5',    name:'Sport Tracksuit',       file:'tracksuit5.jpeg', emoji:'🏋️', basePrice:30.00, cat:'Tracksuits' },
+    { id:'ts6',    name:'Premium Tracksuit',     file:'tracksuit6.jpeg', emoji:'🧥', basePrice:38.00, cat:'Tracksuits' },
+    { id:'torch1', name:'LED Flashlight 500L',   file:'torch1.jpeg',     emoji:'🔦', basePrice:7.00,  cat:'Torches' },
+    { id:'torch2', name:'Heavy Duty Torch',      file:'torch2.jpeg',     emoji:'🔦', basePrice:10.50, cat:'Torches' },
+    { id:'jean1',  name:'Slim Denim Jeans',      file:'jean1.jpeg',      emoji:'👖', basePrice:18.00, cat:'Jeans' },
+    { id:'jean2',  name:'Straight Cut Jeans',    file:'jean2.jpeg',      emoji:'👖', basePrice:20.00, cat:'Jeans' },
+    { id:'jean3',  name:'Bootcut Jeans',         file:'jean3.jpeg',      emoji:'👖', basePrice:17.50, cat:'Jeans' },
+    { id:'jean4',  name:'Ripped Skinny Jeans',   file:'jean4.jpeg',      emoji:'👖', basePrice:22.00, cat:'Jeans' },
+  ];
+
+  let livePrices = {};
+  let prevPrices = {};
+
+  function initPrices() {
+    PRODUCTS.forEach(p => {
+      if (!livePrices[p.id]) livePrices[p.id] = p.basePrice;
+      prevPrices[p.id] = livePrices[p.id];
+    });
   }
-  setCurrentUser(phone);
-  closeAuth();
-  loadDashboard();
-}
 
-function handleLogout() {
-  clearCurrentUser();
-  showScreen('screenLanding');
-  stopPriceTimer();
-}
-
-// ─────────────────────────────────────────────
-// DASHBOARD
-// ─────────────────────────────────────────────
-let priceTimer, countdown = 10;
-function stopPriceTimer() { clearInterval(priceTimer); }
-
-function loadDashboard() {
-  const phone = currentUser();
-  if (!phone) { showScreen('screenLanding'); return; }
-  const users = getUsers();
-  const user = users[phone];
-
-  showScreen('screenDashboard');
-  document.getElementById('navInitial').textContent = user.name[0].toUpperCase();
-  refreshDailyLimits(user);
-
-  if (user.status === 'pending') {
-    document.getElementById('pendingView').style.display='block';
-    document.getElementById('activeView').style.display='none';
-    document.getElementById('welcomeName').textContent = user.name.split(' ')[0];
-    document.getElementById('navBalance').textContent = '0.00';
-  } else {
-    document.getElementById('pendingView').style.display='none';
-    document.getElementById('activeView').style.display='block';
-    initPrices();
-    renderWallet(user);
-    renderProducts(user);
-    renderOwned(user);
-    startPriceTimer();
+  function fluctuatePrices() {
+    prevPrices = { ...livePrices };
+    PRODUCTS.forEach(p => {
+      const cur = livePrices[p.id];
+      const step = (Math.random() * 0.23) - 0.08;
+      const reversion = (p.basePrice - cur) / p.basePrice * 0.12;
+      const newPrice = cur * (1 + step + reversion);
+      const min = p.basePrice * 0.60;
+      const max = p.basePrice * 1.65;
+      livePrices[p.id] = parseFloat(Math.min(max, Math.max(min, newPrice)).toFixed(2));
+    });
   }
-}
 
-function refreshDailyLimits(user) {
-  const today = new Date().toDateString();
-  if (user.lastTradeDate !== today) {
-    user.buyToday = 0; user.sellToday = 0;
-    user.lastTradeDate = today;
-    const users = getUsers();
-    users[user.phone] = user;
-    saveUsers(users);
+  // ── Helpers ──
+  function phoneKey(phone) {
+    // Firebase keys can't contain . # $ [ ]
+    return phone.replace(/[.#$[\]]/g, '_');
   }
-}
 
-function startPriceTimer() {
-  countdown = 10;
-  clearInterval(priceTimer);
-  priceTimer = setInterval(() => {
-    countdown--;
-    const el = document.getElementById('priceCountdown');
-    if (el) el.textContent = countdown + 's';
-    if (countdown <= 0) {
-      countdown = 10;
-      fluctuatePrices();
-      const phone = currentUser();
-      if (phone) {
-        const users = getUsers();
-        renderProducts(users[phone]);
-        renderOwned(users[phone]);
-      }
+  async function getUser(phone) {
+    const snap = await get(ref(db, 'users/' + phoneKey(phone)));
+    return snap.exists() ? snap.val() : null;
+  }
+
+  async function saveUser(user) {
+    await set(ref(db, 'users/' + phoneKey(user.phone)), user);
+  }
+
+  async function updateUser(phone, updates) {
+    await update(ref(db, 'users/' + phoneKey(phone)), updates);
+  }
+
+  // ── Screens ──
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // ── Auth Modal ──
+  window.openLogin    = () => { document.getElementById('authOverlay').classList.add('open'); showModal('loginModal'); };
+  window.openRegister = () => { document.getElementById('authOverlay').classList.add('open'); showModal('registerModal'); };
+  window.closeAuth    = () => document.getElementById('authOverlay').classList.remove('open');
+  window.switchToLogin    = () => showModal('loginModal');
+  window.switchToRegister = () => showModal('registerModal');
+
+  function showModal(id) {
+    document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+  }
+
+  window.handleRegister = async function() {
+    const name  = document.getElementById('regName').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    const pass  = document.getElementById('regPass').value;
+    const err   = document.getElementById('regError');
+    const suc   = document.getElementById('regSuccess');
+    const btn   = document.getElementById('regBtn');
+    err.classList.remove('show'); suc.classList.remove('show');
+
+    if (!name || !phone || !pass) { err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
+    if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.add('show'); return; }
+
+    btn.disabled = true; btn.textContent = 'Creating account...';
+    try {
+      const existing = await getUser(phone);
+      if (existing) { err.textContent = 'This phone number is already registered.'; err.classList.add('show'); return; }
+
+      const user = {
+        name, phone, pass,
+        status: 'pending',
+        balance: 0, startAmount: 0,
+        ownedItems: [],
+        buyToday: 0, sellToday: 0,
+        lastTradeDate: '',
+        profit: 0,
+        createdAt: Date.now()
+      };
+      await saveUser(user);
+      sessionPhone = phone;
+
+      suc.textContent = 'Account created! Logging you in...';
+      suc.classList.add('show');
+      setTimeout(() => { closeAuth(); loadDashboard(); }, 1200);
+    } catch (e) {
+      err.textContent = 'Error: ' + e.message; err.classList.add('show');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Create Account';
     }
-  }, 1000);
-}
+  };
 
-function renderWallet(user) {
-  const profit = parseFloat((user.balance - user.startAmount).toFixed(2));
-  document.getElementById('navBalance').textContent = user.balance.toFixed(2);
-  document.getElementById('walletBalance').textContent = user.balance.toFixed(2);
-  document.getElementById('walletStart').textContent = '$' + user.startAmount.toFixed(2);
-  document.getElementById('walletProfit').textContent = (profit >= 0 ? '+' : '') + '$' + profit.toFixed(2);
-  document.getElementById('walletProfit').style.color = profit >= 0 ? 'var(--accent)' : 'var(--danger)';
-  document.getElementById('walletOwned').textContent = user.ownedItems.length;
-  document.getElementById('walletTrades').textContent = (user.buyToday||0) + (user.sellToday||0);
+  window.handleLogin = async function() {
+    const phone = document.getElementById('loginPhone').value.trim();
+    const pass  = document.getElementById('loginPass').value;
+    const err   = document.getElementById('loginError');
+    const btn   = document.getElementById('loginBtn');
+    err.classList.remove('show');
 
-  // limit dots
-  for(let i=1;i<=5;i++){
-    const bd=document.getElementById('buyD'+i);
-    const sd=document.getElementById('sellD'+i);
-    if(bd) bd.className='dot buy'+(user.buyToday>=i?' used':'');
-    if(sd) sd.className='dot sell-dot'+(user.sellToday>=i?' used':'');
+    btn.disabled = true; btn.textContent = 'Signing in...';
+    try {
+      const user = await getUser(phone);
+      if (!user || user.pass !== pass) {
+        err.textContent = 'Invalid phone number or password.'; err.classList.add('show'); return;
+      }
+      sessionPhone = phone;
+      closeAuth();
+      loadDashboard();
+    } catch (e) {
+      err.textContent = 'Error: ' + e.message; err.classList.add('show');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Sign In';
+    }
+  };
+
+  window.handleLogout = function() {
+    sessionPhone = null;
+    liveUserData = null;
+    if (userListener) { userListener(); userListener = null; }
+    stopPriceTimer();
+    showScreen('screenLanding');
+  };
+
+  // ── Dashboard ──
+  let priceTimer, countdown = 10;
+  function stopPriceTimer() { clearInterval(priceTimer); }
+
+  function refreshDailyLimits(user) {
+    const today = new Date().toDateString();
+    if (user.lastTradeDate !== today) {
+      user.buyToday = 0; user.sellToday = 0;
+      user.lastTradeDate = today;
+    }
+    return user;
   }
-  document.getElementById('buyLimitText').textContent=(user.buyToday||0)+'/5 used';
-  document.getElementById('sellLimitText').textContent=(user.sellToday||0)+'/5 used';
-  document.getElementById('ownedBadge').textContent = user.ownedItems.length;
-}
 
-function renderProducts(user) {
-  const grid = document.getElementById('productsGrid');
-  grid.innerHTML = '';
-  PRODUCTS.forEach(p => {
-    const price = livePrices[p.id];
-    const prev = prevPrices[p.id] || p.basePrice;
-    const up = price >= prev;
-    const pct = (((price - prev) / prev) * 100).toFixed(1);
+  function loadDashboard() {
+    if (!sessionPhone) { showScreen('screenLanding'); return; }
+    showScreen('screenDashboard');
 
-    const canBuy = user.buyToday < 5 && user.balance >= price;
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.innerHTML = `
-      <div class="product-img-wrap">
-        <img src="${p.file}" alt="${p.name}" onerror="this.parentNode.innerHTML='<div class=\\'img-placeholder\\'><div class=\\'emoji\\'>${p.emoji}</div><div>${p.file}</div></div>'">
-        <div class="product-badge ${up?'up':''}">
-          ${up ? '▲ HOT' : '▼ DEAL'}
+    // Subscribe to real-time user updates
+    if (userListener) userListener();
+    userListener = onValue(ref(db, 'users/' + phoneKey(sessionPhone)), snap => {
+      if (!snap.exists()) { handleLogout(); return; }
+      liveUserData = snap.val();
+      applyDashboard(liveUserData);
+    });
+  }
+
+  function applyDashboard(user) {
+    document.getElementById('navInitial').textContent = user.name[0].toUpperCase();
+    user = refreshDailyLimits(user);
+
+    if (user.status === 'pending') {
+      document.getElementById('pendingView').style.display = 'block';
+      document.getElementById('activeView').style.display  = 'none';
+      document.getElementById('welcomeName').textContent   = user.name.split(' ')[0];
+      document.getElementById('navBalance').textContent    = '0.00';
+      stopPriceTimer();
+    } else {
+      document.getElementById('pendingView').style.display = 'none';
+      document.getElementById('activeView').style.display  = 'block';
+      initPrices();
+      renderWallet(user);
+      renderProducts(user);
+      renderOwned(user);
+      startPriceTimer();
+    }
+  }
+
+  function startPriceTimer() {
+    countdown = 10;
+    clearInterval(priceTimer);
+    priceTimer = setInterval(() => {
+      countdown--;
+      const el = document.getElementById('priceCountdown');
+      if (el) el.textContent = countdown + 's';
+      if (countdown <= 0) {
+        countdown = 10;
+        fluctuatePrices();
+        if (liveUserData) {
+          renderProducts(liveUserData);
+          renderOwned(liveUserData);
+        }
+      }
+    }, 1000);
+  }
+
+  function renderWallet(user) {
+    const profit = parseFloat((user.balance - user.startAmount).toFixed(2));
+    document.getElementById('navBalance').textContent    = user.balance.toFixed(2);
+    document.getElementById('walletBalance').textContent = user.balance.toFixed(2);
+    document.getElementById('walletStart').textContent   = '$' + user.startAmount.toFixed(2);
+    document.getElementById('walletProfit').textContent  = (profit >= 0 ? '+' : '') + '$' + profit.toFixed(2);
+    document.getElementById('walletProfit').style.color  = profit >= 0 ? 'var(--accent)' : 'var(--danger)';
+    document.getElementById('walletOwned').textContent   = (user.ownedItems || []).length;
+    document.getElementById('walletTrades').textContent  = (user.buyToday || 0) + (user.sellToday || 0);
+
+    for (let i = 1; i <= 5; i++) {
+      const bd = document.getElementById('buyD' + i);
+      const sd = document.getElementById('sellD' + i);
+      if (bd) bd.className = 'dot buy' + (user.buyToday >= i ? ' used' : '');
+      if (sd) sd.className = 'dot sell-dot' + (user.sellToday >= i ? ' used' : '');
+    }
+    document.getElementById('buyLimitText').textContent  = (user.buyToday || 0) + '/5 used';
+    document.getElementById('sellLimitText').textContent = (user.sellToday || 0) + '/5 used';
+    document.getElementById('ownedBadge').textContent    = (user.ownedItems || []).length;
+  }
+
+  function renderProducts(user) {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = '';
+    PRODUCTS.forEach(p => {
+      const price = livePrices[p.id];
+      const prev  = prevPrices[p.id] || p.basePrice;
+      const up    = price >= prev;
+      const pct   = (((price - prev) / prev) * 100).toFixed(1);
+      const canBuy = user.buyToday < 5 && user.balance >= price;
+
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="product-img-wrap">
+          <img src="${p.file}" alt="${p.name}" onerror="this.parentNode.innerHTML='<div class=\\'img-placeholder\\'><div class=\\'emoji\\'>${p.emoji}</div><div>${p.file}</div></div>'">
+          <div class="product-badge ${up ? 'up' : ''}">${up ? '▲ HOT' : '▼ DEAL'}</div>
         </div>
-      </div>
-      <div class="product-body">
-        <div class="product-name">${p.name}</div>
-        <div class="product-file">${p.file}</div>
-        <div class="product-price-row">
-          <div class="product-price">$${price.toFixed(2)}</div>
-          <div class="product-change ${up?'up':'down'}">${up?'+':''}${pct}%</div>
+        <div class="product-body">
+          <div class="product-name">${p.name}</div>
+          <div class="product-file">${p.file}</div>
+          <div class="product-price-row">
+            <div class="product-price">$${price.toFixed(2)}</div>
+            <div class="product-change ${up ? 'up' : 'down'}">${up ? '+' : ''}${pct}%</div>
+          </div>
+          <button class="btn-buy" onclick="buyProduct('${p.id}')" ${!canBuy ? 'disabled' : ''}>
+            ${user.buyToday >= 5 ? 'Daily Limit Reached' : user.balance < price ? 'Insufficient Funds' : 'Buy Now'}
+          </button>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  function renderOwned(user) {
+    const grid = document.getElementById('ownedGrid');
+    const items = user.ownedItems || [];
+    if (items.length === 0) {
+      grid.innerHTML = '<p style="color:var(--muted);font-size:.85rem;padding:0 4px;">You don\'t own any items yet. Buy something to get started!</p>';
+      return;
+    }
+    grid.innerHTML = '';
+    items.forEach((item, idx) => {
+      const prod = PRODUCTS.find(p => p.id === item.id);
+      if (!prod) return;
+      const currentPrice = livePrices[prod.id] || prod.basePrice;
+      const profit = parseFloat((currentPrice - item.buyPrice).toFixed(2));
+      const canSell = user.sellToday < 5;
+      const div = document.createElement('div');
+      div.className = 'owned-card';
+      div.innerHTML = `
+        <div class="owned-name">${prod.name}</div>
+        <div style="font-size:.7rem;color:var(--muted);">${prod.file}</div>
+        <div>
+          <div style="font-size:.72rem;color:var(--muted);">Bought at</div>
+          <div class="owned-price">$${item.buyPrice.toFixed(2)}</div>
         </div>
-        <button class="btn-buy" onclick="buyProduct('${p.id}')" ${!canBuy?'disabled':''}>
-          ${user.buyToday>=5 ? 'Daily Limit Reached' : user.balance < price ? 'Insufficient Funds' : 'Buy Now'}
-        </button>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function renderOwned(user) {
-  const grid = document.getElementById('ownedGrid');
-  if (!user.ownedItems || user.ownedItems.length === 0) {
-    grid.innerHTML = '<p style="color:var(--muted);font-size:.85rem;padding:0 4px;">You don\'t own any items yet. Buy something to get started!</p>';
-    return;
-  }
-  grid.innerHTML = '';
-  user.ownedItems.forEach((item, idx) => {
-    const prod = PRODUCTS.find(p => p.id === item.id);
-    if (!prod) return;
-    const currentPrice = livePrices[prod.id] || prod.basePrice;
-    const profit = parseFloat((currentPrice - item.buyPrice).toFixed(2));
-    const canSell = user.sellToday < 5;
-    const div = document.createElement('div');
-    div.className = 'owned-card';
-    div.innerHTML = `
-      <div class="owned-name">${prod.name}</div>
-      <div style="font-size:.7rem;color:var(--muted);">${prod.file}</div>
-      <div>
-        <div style="font-size:.72rem;color:var(--muted);">Bought at</div>
-        <div class="owned-price">$${item.buyPrice.toFixed(2)}</div>
-      </div>
-      <div>
-        <div style="font-size:.72rem;color:var(--muted);">Current</div>
-        <div style="font-weight:700;font-size:.95rem;">$${currentPrice.toFixed(2)}</div>
-      </div>
-      <div class="owned-profit ${profit >= 0 ? 'pos':'neg'}">${profit >= 0 ? '▲ +':'▼ '}$${Math.abs(profit).toFixed(2)} P&L</div>
-      <button class="btn-sell" onclick="sellProduct(${idx})" ${!canSell?'disabled':''}>
-        ${canSell ? 'Sell at $' + currentPrice.toFixed(2) : 'Sell Limit Reached'}
-      </button>
-    `;
-    grid.appendChild(div);
-  });
-}
-
-// ─────────────────────────────────────────────
-// TRADE ACTIONS
-// ─────────────────────────────────────────────
-function buyProduct(productId) {
-  const phone = currentUser();
-  const users = getUsers();
-  let user = users[phone];
-  refreshDailyLimits(user);
-
-  if (user.buyToday >= 5) { toast('error', '🚫 Daily buy limit reached (5/day). Come back tomorrow!'); return; }
-
-  const prod = PRODUCTS.find(p => p.id === productId);
-  const price = livePrices[prod.id];
-
-  if (user.balance < price) {
-    toast('error', '💸 Insufficient balance! You need $' + price.toFixed(2) + ' but have $' + user.balance.toFixed(2));
-    return;
+        <div>
+          <div style="font-size:.72rem;color:var(--muted);">Current</div>
+          <div style="font-weight:700;font-size:.95rem;">$${currentPrice.toFixed(2)}</div>
+        </div>
+        <div class="owned-profit ${profit >= 0 ? 'pos' : 'neg'}">${profit >= 0 ? '▲ +' : '▼ '}$${Math.abs(profit).toFixed(2)} P&L</div>
+        <button class="btn-sell" onclick="sellProduct(${idx})" ${!canSell ? 'disabled' : ''}>
+          ${canSell ? 'Sell at $' + currentPrice.toFixed(2) : 'Sell Limit Reached'}
+        </button>`;
+      grid.appendChild(div);
+    });
   }
 
-  user.balance = parseFloat((user.balance - price).toFixed(2));
-  user.buyToday = (user.buyToday || 0) + 1;
-  user.ownedItems.push({ id: prod.id, buyPrice: price, boughtAt: Date.now() });
-  users[phone] = user;
-  saveUsers(users);
+  // ── Trade Actions ──
+  window.buyProduct = async function(productId) {
+    if (!liveUserData) return;
+    let user = { ...liveUserData };
+    user = refreshDailyLimits(user);
 
-  toast('success', '✅ Purchased ' + prod.name + ' for $' + price.toFixed(2));
-  renderWallet(user);
-  renderProducts(user);
-  renderOwned(user);
-}
+    if (user.buyToday >= 5) { toast('error', '🚫 Daily buy limit reached (5/day). Come back tomorrow!'); return; }
 
-function sellProduct(ownedIdx) {
-  const phone = currentUser();
-  const users = getUsers();
-  let user = users[phone];
-  refreshDailyLimits(user);
+    const prod  = PRODUCTS.find(p => p.id === productId);
+    const price = livePrices[prod.id];
 
-  if (user.sellToday >= 5) { toast('error', '🚫 Daily sell limit reached (5/day). Try again tomorrow!'); return; }
+    if (user.balance < price) {
+      toast('error', '💸 Insufficient balance! You need $' + price.toFixed(2) + ' but have $' + user.balance.toFixed(2));
+      return;
+    }
 
-  const item = user.ownedItems[ownedIdx];
-  const prod = PRODUCTS.find(p => p.id === item.id);
-  const price = livePrices[prod.id];
-  const profitMade = parseFloat((price - item.buyPrice).toFixed(2));
+    const ownedItems = [...(user.ownedItems || []), { id: prod.id, buyPrice: price, boughtAt: Date.now() }];
+    const updates = {
+      balance: parseFloat((user.balance - price).toFixed(2)),
+      buyToday: (user.buyToday || 0) + 1,
+      lastTradeDate: new Date().toDateString(),
+      ownedItems
+    };
 
-  user.balance = parseFloat((user.balance + price).toFixed(2));
-  user.profit = parseFloat(((user.profit||0) + profitMade).toFixed(2));
-  user.sellToday = (user.sellToday || 0) + 1;
-  user.ownedItems.splice(ownedIdx, 1);
-  users[phone] = user;
-  saveUsers(users);
+    try {
+      await updateUser(sessionPhone, updates);
+      toast('success', '✅ Purchased ' + prod.name + ' for $' + price.toFixed(2));
+    } catch (e) {
+      toast('error', 'Trade failed: ' + e.message);
+    }
+  };
 
-  const msg = profitMade >= 0
-    ? '🎉 Sold ' + prod.name + ' for $' + price.toFixed(2) + ' · Profit: +$' + profitMade.toFixed(2)
-    : '📉 Sold ' + prod.name + ' for $' + price.toFixed(2) + ' · Loss: -$' + Math.abs(profitMade).toFixed(2);
-  toast(profitMade >= 0 ? 'success' : 'warn', msg);
+  window.sellProduct = async function(ownedIdx) {
+    if (!liveUserData) return;
+    let user = { ...liveUserData };
+    user = refreshDailyLimits(user);
 
-  renderWallet(user);
-  renderProducts(user);
-  renderOwned(user);
-}
+    if (user.sellToday >= 5) { toast('error', '🚫 Daily sell limit reached (5/day). Try again tomorrow!'); return; }
 
-function handleWithdraw() {
-  const phone = currentUser();
-  const users = getUsers();
-  const user = users[phone];
-  const profit = parseFloat((user.balance - user.startAmount).toFixed(2));
+    const items      = [...(user.ownedItems || [])];
+    const item       = items[ownedIdx];
+    const prod       = PRODUCTS.find(p => p.id === item.id);
+    const price      = livePrices[prod.id];
+    const profitMade = parseFloat((price - item.buyPrice).toFixed(2));
 
-  if (profit < 8) {
-    toast('error', '🚫 Withdrawal not available. You need at least $8.00 profit above your starting amount. Current profit: $' + (profit > 0 ? profit.toFixed(2) : '0.00'));
-    return;
+    items.splice(ownedIdx, 1);
+    const updates = {
+      balance: parseFloat((user.balance + price).toFixed(2)),
+      profit: parseFloat(((user.profit || 0) + profitMade).toFixed(2)),
+      sellToday: (user.sellToday || 0) + 1,
+      lastTradeDate: new Date().toDateString(),
+      ownedItems: items
+    };
+
+    try {
+      await updateUser(sessionPhone, updates);
+      const msg = profitMade >= 0
+        ? '🎉 Sold ' + prod.name + ' for $' + price.toFixed(2) + ' · Profit: +$' + profitMade.toFixed(2)
+        : '📉 Sold ' + prod.name + ' for $' + price.toFixed(2) + ' · Loss: -$' + Math.abs(profitMade).toFixed(2);
+      toast(profitMade >= 0 ? 'success' : 'warn', msg);
+    } catch (e) {
+      toast('error', 'Trade failed: ' + e.message);
+    }
+  };
+
+  window.handleWithdraw = function() {
+    if (!liveUserData) return;
+    const user   = liveUserData;
+    const profit = parseFloat((user.balance - user.startAmount).toFixed(2));
+    if (profit < 8) {
+      toast('error', '🚫 Withdrawal not available. You need at least $8.00 profit above your starting amount. Current profit: $' + (profit > 0 ? profit.toFixed(2) : '0.00'));
+      return;
+    }
+    toast('success', '✅ Withdrawal request submitted! Our team will process your request within 24 hours.');
+  };
+
+  // ── Toast ──
+  function toast(type, msg) {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
   }
-  toast('success', '✅ Withdrawal request submitted! Our team will process your request within 24 hours.');
-}
+  window.toast = toast;
 
-// ─────────────────────────────────────────────
-// TOAST
-// ─────────────────────────────────────────────
-function toast(type, msg) {
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => t.remove(), 4000);
-}
-
-// ─────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────
-(function init() {
-  initPrices();
-  const phone = currentUser();
-  if (phone) {
-    const users = getUsers();
-    if (users[phone]) { loadDashboard(); return; }
-  }
-  showScreen('screenLanding');
-})();
+  // ── Init ──
+  (function init() {
+    initPrices();
+    document.getElementById('loadingOverlay').style.display = 'none';
+    showScreen('screenLanding');
+  })();
 </script>
 </body>
 </html>
